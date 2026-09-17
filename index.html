@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Секретное послание</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5efff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game {
+    width: min(1200px, 100vw);
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #fff5fc, #eef5ff);
+    border-radius: 24px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    text-align: center;
+    margin: 0 0 8px;
+    color: #654b8c;
+    font-size: clamp(24px, 3vw, 42px);
+}
+
+.instruction {
+    text-align: center;
+    color: #666;
+    font-size: clamp(14px, 1.5vw, 20px);
+    margin-bottom: 15px;
+}
+
+.progress {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: #70569b;
+    font-weight: bold;
+}
+
+.secret-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.secret-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.picture {
+    width: clamp(70px, 9vw, 125px);
+    height: clamp(70px, 9vw, 125px);
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(38px, 6vw, 75px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.answer-box {
+    width: clamp(48px, 6vw, 75px);
+    height: clamp(48px, 6vw, 75px);
+    border-radius: 12px;
+    background: white;
+    border: 3px solid #d4c4eb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(25px, 3vw, 40px);
+    font-weight: bold;
+    color: #4e3b70;
+}
+
+.answer-box.correct {
+    background: #dff6df;
+    border-color: #69b96c;
+}
+
+.keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 7px;
+    max-width: 950px;
+    margin: 10px auto;
+}
+
+.key {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 3px 8px rgba(0,0,0,.1);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #594477;
+    transition: .15s;
+}
+
+.key:hover {
+    transform: translateY(-2px);
+    background: #f1e9ff;
+}
+
+.key:active {
+    transform: scale(.95);
+}
+
+.message {
+    min-height: 28px;
+    text-align: center;
+    font-size: 19px;
+    font-weight: bold;
+    color: #66507f;
+}
+
+.next {
+    align-self: center;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    background: #8c6ac7;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.next:hover {
+    transform: scale(1.03);
+}
+
+@media(max-width:700px) {
+    .game {
+        min-height: 100vh;
+        aspect-ratio: auto;
+        border-radius: 0;
+    }
+
+    .secret-area {
+        gap: 8px;
+    }
+
+    .key {
+        width: 38px;
+        height: 38px;
+        font-size: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>🔐 Секретное послание</h1>
+
+    <div class="instruction">
+        Назови картинки. Какая буква спряталась в начале каждого слова?
+    </div>
+
+    <div class="progress" id="progress"></div>
+
+    <div class="secret-area" id="secretArea"></div>
+
+    <div class="message" id="message"></div>
+
+    <div class="keyboard" id="keyboard"></div>
+
+    <button class="next" id="nextButton">
+        Следующее задание ➜
+    </button>
+
+</div>
+
+<script>
+
+/* ==========================================
+   НАСТРОЙКИ ИГРЫ
+
+   Позже здесь будем менять задания,
+   картинки и ответы.
+========================================== */
+
+const levels = [
+
+    {
+        pictures: ["🐱", "🥒", "🎂"],
+        names: ["кот", "огурец", "торт"],
+        answer: "КОТ"
+    },
+
+    {
+        pictures: ["🦊", "🍉", "🐶"],
+        names: ["лиса", "арбуз", "собака"],
+        answer: "ЛАС"
+    },
+
+    {
+        pictures: ["🐭", "🦃", "🏠"],
+        names: ["мышь", "индюк", "дом"],
+        answer: "МИД"
+    }
+
+];
+
+
+/* Русская клавиатура */
+
+const alphabet =
+"ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ";
+
+
+let currentLevel = 0;
+let currentLetter = 0;
+
+
+/* Элементы страницы */
+
+const secretArea =
+    document.getElementById("secretArea");
+
+const keyboard =
+    document.getElementById("keyboard");
+
+const message =
+    document.getElementById("message");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+const progress =
+    document.getElementById("progress");
+
+
+/* ==========================================
+   СОЗДАНИЕ КЛАВИАТУРЫ
+========================================== */
+
+function createKeyboard() {
+
+    keyboard.innerHTML = "";
+
+    for (const letter of alphabet) {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "key";
+        button.textContent = letter;
+
+        button.addEventListener(
+            "click",
+            () => chooseLetter(letter)
+        );
+
+        keyboard.appendChild(button);
+    }
+}
+
+
+/* ==========================================
+   ЗАГРУЗКА УРОВНЯ
+========================================== */
+
+function loadLevel() {
+
+    const level =
+        levels[currentLevel];
+
+    currentLetter = 0;
+
+    secretArea.innerHTML = "";
+
+    message.textContent = "";
+
+    nextButton.style.visibility = "hidden";
+
+    progress.textContent =
+        `${currentLevel + 1} / ${levels.length}`;
+
+
+    level.pictures.forEach(
+        (picture, index) => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "secret-item";
+
+
+            const pictureBox =
+                document.createElement("div");
+
+            pictureBox.className =
+                "picture";
+
+            pictureBox.textContent =
+                picture;
+
+            pictureBox.title =
+                level.names[index];
+
+
+            const answer =
+                document.createElement("div");
+
+            answer.className =
+                "answer-box";
+
+            answer.dataset.index =
+                index;
+
+
+            item.appendChild(
+                pictureBox
+            );
+
+            item.appendChild(
+                answer
+            );
+
+            secretArea.appendChild(
+                item
+            );
+        }
+    );
+}
+
+
+/* ==========================================
+   ВЫБОР БУКВЫ
+========================================== */
+
+function chooseLetter(letter) {
+
+    const level =
+        levels[currentLevel];
+
+    if (
+        currentLetter >=
+        level.answer.length
+    ) {
+        return;
+    }
+
+
+    const correctLetter =
+        level.answer[currentLetter];
+
+
+    if (letter === correctLetter) {
+
+        const boxes =
+            document.querySelectorAll(
+                ".answer-box"
+            );
+
+        boxes[currentLetter]
+            .textContent = letter;
+
+        boxes[currentLetter]
+            .classList.add("correct");
+
+
+        currentLetter++;
+
+
+        message.textContent =
+            "✅ Верно!";
+
+
+        if (
+            currentLetter ===
+            level.answer.length
+        ) {
+
+            message.textContent =
+                "🎉 Послание разгадано!";
+
+            nextButton.style.visibility =
+                "visible";
+        }
+
+    }
+
+    else {
+
+        message.textContent =
+            "Попробуй ещё раз 🙂";
+    }
+}
+
+
+/* ==========================================
+   СЛЕДУЮЩИЙ УРОВЕНЬ
+========================================== */
+
+nextButton.addEventListener(
+    "click",
+    () => {
+
+        currentLevel++;
+
+        if (
+            currentLevel >=
+            levels.length
+        ) {
+
+            currentLevel = 0;
+
+            message.textContent =
+                "🏆 Все задания выполнены!";
+        }
+
+        loadLevel();
+    }
+);
+
+
+/* ==========================================
+   ЗАПУСК
+========================================== */
+
+createKeyboard();
+
+loadLevel();
+
+</script>
+
+</body>
+</html>
