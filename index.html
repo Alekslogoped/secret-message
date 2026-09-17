@@ -3,254 +3,772 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Секретное послание</title>
 
 <style>
-* {
-    box-sizing: border-box;
+:root{
+    --purple:#7559b7;
+    --purple-dark:#59408f;
+    --pink:#f2a9ca;
+    --blue:#a8d9f4;
+    --cream:#fffaf4;
+    --green:#7bc58a;
+    --red:#ef7f86;
+    --text:#463b59;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5efff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
-.game {
-    width: min(1200px, 100vw);
-    aspect-ratio: 16 / 9;
-    background: linear-gradient(135deg, #fff5fc, #eef5ff);
-    border-radius: 24px;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:"Trebuchet MS",Arial,sans-serif;
+    background:#e8e0f6;
 }
 
-h1 {
-    text-align: center;
-    margin: 0 0 8px;
-    color: #654b8c;
-    font-size: clamp(24px, 3vw, 42px);
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-.instruction {
-    text-align: center;
-    color: #666;
-    font-size: clamp(14px, 1.5vw, 20px);
-    margin-bottom: 15px;
+/* =========================
+   ОСНОВНОЕ ПОЛЕ 16:9
+========================= */
+
+.game{
+    width:100vw;
+    height:100vh;
+    max-width:177.78vh;
+    max-height:56.25vw;
+
+    position:relative;
+    overflow:hidden;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    padding:2vh 3vw;
+
+    background:
+        radial-gradient(circle at 12% 15%,rgba(255,255,255,.9) 0 3%,transparent 3.2%),
+        radial-gradient(circle at 88% 18%,rgba(255,255,255,.7) 0 2.5%,transparent 2.7%),
+        linear-gradient(135deg,#fff8f1 0%,#f8efff 45%,#eaf6ff 100%);
 }
 
-.progress {
-    position: absolute;
-    right: 25px;
-    top: 25px;
-    background: white;
-    padding: 8px 15px;
-    border-radius: 20px;
-    color: #70569b;
-    font-weight: bold;
+/* декоративные пятна */
+
+.game::before{
+    content:"";
+    position:absolute;
+    width:24vw;
+    height:24vw;
+    left:-8vw;
+    bottom:-12vw;
+    border-radius:50%;
+    background:rgba(242,169,202,.25);
 }
 
-.secret-area {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 18px;
+.game::after{
+    content:"";
+    position:absolute;
+    width:25vw;
+    height:25vw;
+    right:-10vw;
+    top:-12vw;
+    border-radius:50%;
+    background:rgba(168,217,244,.30);
 }
 
-.secret-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+.content{
+    width:100%;
+    height:100%;
+    position:relative;
+    z-index:2;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 
-.picture {
-    width: clamp(70px, 9vw, 125px);
-    height: clamp(70px, 9vw, 125px);
-    background: white;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(38px, 6vw, 75px);
-    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+/* =========================
+   ВЕРХ
+========================= */
+
+.topbar{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
 }
 
-.answer-box {
-    width: clamp(48px, 6vw, 75px);
-    height: clamp(48px, 6vw, 75px);
-    border-radius: 12px;
-    background: white;
-    border: 3px solid #d4c4eb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: clamp(25px, 3vw, 40px);
-    font-weight: bold;
-    color: #4e3b70;
+.title{
+    margin:0;
+    color:var(--purple-dark);
+    font-size:clamp(22px,3vw,46px);
+    font-weight:900;
+    text-align:center;
 }
 
-.answer-box.correct {
-    background: #dff6df;
-    border-color: #69b96c;
+.progress{
+    position:absolute;
+    right:0;
+    top:0;
+
+    padding:.6em 1em;
+    background:rgba(255,255,255,.85);
+    border:2px solid rgba(117,89,183,.15);
+    border-radius:999px;
+
+    color:var(--purple-dark);
+    font-weight:800;
+    font-size:clamp(12px,1.3vw,18px);
+
+    box-shadow:0 6px 18px rgba(80,60,110,.10);
 }
 
-.keyboard {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 7px;
-    max-width: 950px;
-    margin: 10px auto;
+.instruction{
+    margin:.6vh 0 1vh;
+    text-align:center;
+    color:#675d72;
+    font-size:clamp(13px,1.45vw,20px);
 }
 
-.key {
-    width: 48px;
-    height: 48px;
-    border: none;
-    border-radius: 10px;
-    background: white;
-    box-shadow: 0 3px 8px rgba(0,0,0,.1);
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #594477;
-    transition: .15s;
+/* =========================
+   ПАНЕЛЬ ЗАДАНИЯ
+========================= */
+
+.task-card{
+    width:min(94%,1200px);
+    flex:1;
+
+    background:rgba(255,255,255,.78);
+    border:2px solid rgba(255,255,255,.9);
+    border-radius:28px;
+
+    box-shadow:
+        0 15px 40px rgba(74,54,100,.12),
+        inset 0 0 0 1px rgba(117,89,183,.05);
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    padding:1.2vh 2vw;
+    min-height:0;
 }
 
-.key:hover {
-    transform: translateY(-2px);
-    background: #f1e9ff;
+.secret-sentence{
+    width:100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    flex-wrap:wrap;
+
+    gap:clamp(16px,3vw,45px);
 }
 
-.key:active {
-    transform: scale(.95);
+/* отдельное слово */
+
+.secret-word{
+    display:flex;
+    gap:clamp(5px,.65vw,10px);
 }
 
-.message {
-    min-height: 28px;
-    text-align: center;
-    font-size: 19px;
-    font-weight: bold;
-    color: #66507f;
+/* буква + картинка */
+
+.secret-letter{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.6vh;
 }
 
-.next {
-    align-self: center;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 20px;
-    background: #8c6ac7;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    visibility: hidden;
+.picture{
+    width:clamp(48px,6.2vw,92px);
+    height:clamp(48px,6.2vw,92px);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:white;
+    border-radius:18px;
+
+    font-size:clamp(30px,4.5vw,65px);
+
+    box-shadow:
+        0 6px 16px rgba(74,54,100,.10);
+
+    border:2px solid #f3edf8;
+
+    transition:.2s;
 }
 
-.next:hover {
-    transform: scale(1.03);
+.picture.active{
+    transform:translateY(-4px);
+    border-color:var(--purple);
+    box-shadow:
+        0 8px 22px rgba(117,89,183,.25);
 }
 
-@media(max-width:700px) {
-    .game {
-        min-height: 100vh;
-        aspect-ratio: auto;
-        border-radius: 0;
+.letter-box{
+    width:clamp(38px,4.8vw,67px);
+    height:clamp(38px,4.8vw,67px);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#fff;
+    border:3px solid #d9cdec;
+    border-radius:12px;
+
+    font-size:clamp(21px,2.7vw,38px);
+    font-weight:900;
+    color:var(--purple-dark);
+
+    transition:.2s;
+}
+
+.letter-box.current{
+    border-color:var(--purple);
+    box-shadow:0 0 0 4px rgba(117,89,183,.12);
+}
+
+.letter-box.correct{
+    background:#e5f7e8;
+    border-color:var(--green);
+    animation:pop .25s ease;
+}
+
+@keyframes pop{
+    50%{transform:scale(1.16);}
+}
+
+/* =========================
+   СООБЩЕНИЕ
+========================= */
+
+.message{
+    height:4.5vh;
+    min-height:25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:clamp(14px,1.55vw,21px);
+    font-weight:900;
+    color:var(--purple-dark);
+}
+
+.message.error{
+    color:#c84f59;
+    animation:shake .25s linear;
+}
+
+@keyframes shake{
+    25%{transform:translateX(-6px);}
+    50%{transform:translateX(6px);}
+    75%{transform:translateX(-4px);}
+}
+
+/* =========================
+   КЛАВИАТУРА
+========================= */
+
+.keyboard{
+    width:min(94%,1050px);
+
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+
+    gap:clamp(3px,.45vw,7px);
+
+    margin-top:.5vh;
+}
+
+.key{
+    width:clamp(31px,3.7vw,52px);
+    height:clamp(31px,3.7vw,52px);
+
+    border:0;
+    border-radius:10px;
+
+    background:white;
+
+    color:#514165;
+
+    font-size:clamp(14px,1.6vw,21px);
+    font-weight:900;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 4px 10px rgba(65,48,90,.13);
+
+    transition:
+        transform .12s,
+        background .12s;
+}
+
+.key:hover{
+    background:#f1e9ff;
+    transform:translateY(-2px);
+}
+
+.key:active{
+    transform:scale(.92);
+}
+
+.key.wrong{
+    animation:keyWrong .25s;
+    background:#ffe3e5;
+}
+
+@keyframes keyWrong{
+    50%{transform:scale(.82);}
+}
+
+/* =========================
+   НИЖНЯЯ ЧАСТЬ
+========================= */
+
+.bottom{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    min-height:7vh;
+}
+
+.next-btn{
+    border:0;
+
+    padding:.7em 1.7em;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(135deg,#8d70cc,#7253b4);
+
+    color:white;
+
+    font-size:clamp(14px,1.5vw,20px);
+    font-weight:900;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 7px 18px rgba(89,64,143,.25);
+
+    opacity:0;
+    pointer-events:none;
+
+    transform:translateY(10px);
+
+    transition:.25s;
+}
+
+.next-btn.show{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+}
+
+.next-btn:hover{
+    transform:scale(1.04);
+}
+
+/* =========================
+   ФИНАЛ
+========================= */
+
+.finish{
+    position:absolute;
+    inset:0;
+    z-index:20;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    background:
+        linear-gradient(135deg,#fff6fc,#edf7ff);
+}
+
+.finish.show{
+    display:flex;
+}
+
+.finish-card{
+    text-align:center;
+
+    background:white;
+
+    padding:5vh 6vw;
+
+    border-radius:35px;
+
+    box-shadow:
+        0 20px 50px rgba(78,55,105,.18);
+
+    animation:finishIn .5s ease;
+}
+
+@keyframes finishIn{
+    from{
+        opacity:0;
+        transform:scale(.7);
+    }
+}
+
+.finish-icon{
+    font-size:clamp(60px,9vw,130px);
+}
+
+.finish h2{
+    margin:.3em 0;
+
+    font-size:clamp(28px,4vw,60px);
+
+    color:var(--purple-dark);
+}
+
+.finish p{
+    font-size:clamp(16px,2vw,27px);
+    color:#70657b;
+}
+
+.restart{
+    border:0;
+    border-radius:999px;
+
+    padding:.8em 1.7em;
+
+    background:var(--purple);
+
+    color:white;
+
+    font-size:clamp(15px,1.5vw,20px);
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+/* =========================
+   ЗВЁЗДОЧКИ
+========================= */
+
+.star{
+    position:absolute;
+    pointer-events:none;
+    z-index:30;
+
+    font-size:25px;
+
+    animation:starFly .8s ease-out forwards;
+}
+
+@keyframes starFly{
+    0%{
+        opacity:1;
+        transform:translate(0,0) scale(.5);
     }
 
-    .secret-area {
-        gap: 8px;
+    100%{
+        opacity:0;
+        transform:
+            translate(
+                var(--x),
+                var(--y)
+            )
+            rotate(180deg)
+            scale(1.4);
+    }
+}
+
+/* =========================
+   МОБИЛЬНАЯ АДАПТАЦИЯ
+========================= */
+
+@media(max-aspect-ratio:4/3){
+
+    html,body{
+        overflow:auto;
     }
 
-    .key {
-        width: 38px;
-        height: 38px;
-        font-size: 17px;
+    .game{
+        width:100%;
+        height:auto;
+        min-height:100vh;
+
+        max-width:none;
+        max-height:none;
+
+        padding:15px;
     }
+
+    .task-card{
+        min-height:45vh;
+    }
+
+    .progress{
+        position:relative;
+        right:auto;
+        top:auto;
+        margin-left:10px;
+    }
+
+    .secret-sentence{
+        margin:15px 0;
+    }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="game">
+<main class="game" id="game">
 
-    <h1>🔐 Секретное послание</h1>
+<div class="content">
 
-    <div class="instruction">
-        Назови картинки. Какая буква спряталась в начале каждого слова?
+    <div class="topbar">
+
+        <h1 class="title">
+            🔐 Секретное послание
+        </h1>
+
+        <div
+            class="progress"
+            id="progress">
+        </div>
+
     </div>
 
-    <div class="progress" id="progress"></div>
 
-    <div class="secret-area" id="secretArea"></div>
+    <div class="instruction">
+        Назови картинки и определи первую букву каждого слова.
+        Расшифруй секретное предложение!
+    </div>
 
-    <div class="message" id="message"></div>
 
-    <div class="keyboard" id="keyboard"></div>
+    <section class="task-card">
 
-    <button class="next" id="nextButton">
-        Следующее задание ➜
-    </button>
+        <div
+            class="secret-sentence"
+            id="secretSentence">
+        </div>
+
+    </section>
+
+
+    <div
+        class="message"
+        id="message">
+    </div>
+
+
+    <div
+        class="keyboard"
+        id="keyboard">
+    </div>
+
+
+    <div class="bottom">
+
+        <button
+            class="next-btn"
+            id="nextButton">
+
+            Следующее задание ➜
+
+        </button>
+
+    </div>
 
 </div>
 
+
+<!-- ФИНАЛ -->
+
+<div
+    class="finish"
+    id="finish">
+
+    <div class="finish-card">
+
+        <div class="finish-icon">
+            🏆
+        </div>
+
+        <h2>
+            Молодец!
+        </h2>
+
+        <p>
+            Все секретные послания разгаданы!
+        </p>
+
+        <button
+            class="restart"
+            id="restart">
+
+            Играть ещё раз
+
+        </button>
+
+    </div>
+
+</div>
+
+</main>
+
+
 <script>
 
-/* ==========================================
-   НАСТРОЙКИ ИГРЫ
+/* =========================================================
+   НАСТРОЙКИ ПЕДАГОГА
 
-   Позже здесь будем менять задания,
-   картинки и ответы.
-========================================== */
+   Именно здесь позже будем менять задания.
 
-const levels = [
+   picture — пока эмодзи.
+   Позже сюда поставим PNG-картинки.
 
-    {
-        pictures: ["🐱", "🥒", "🎂"],
-        names: ["кот", "огурец", "торт"],
-        answer: "КОТ"
-    },
+   name — название картинки.
+   letter — буква, которую она шифрует.
+========================================================= */
 
-    {
-        pictures: ["🦊", "🍉", "🐶"],
-        names: ["лиса", "арбуз", "собака"],
-        answer: "ЛАС"
-    },
 
-    {
-        pictures: ["🐭", "🦃", "🏠"],
-        names: ["мышь", "индюк", "дом"],
-        answer: "МИД"
-    }
+const LEVELS = [
+
+    /* УРОВЕНЬ 1
+       КОТ СПИТ
+    */
+
+    [
+        [
+            {picture:"🐱", name:"кот", letter:"К"},
+            {picture:"🥒", name:"огурец", letter:"О"},
+            {picture:"🎂", name:"торт", letter:"Т"}
+        ],
+
+        [
+            {picture:"🐶", name:"собака", letter:"С"},
+            {picture:"🍅", name:"помидор", letter:"П"},
+            {picture:"🦃", name:"индюк", letter:"И"},
+            {picture:"🎂", name:"торт", letter:"Т"}
+        ]
+    ],
+
+
+    /* УРОВЕНЬ 2
+       МАМА ПЬЁТ
+    */
+
+    [
+        [
+            {picture:"🐭", name:"мышь", letter:"М"},
+            {picture:"🍉", name:"арбуз", letter:"А"},
+            {picture:"🐭", name:"мышь", letter:"М"},
+            {picture:"🍉", name:"арбуз", letter:"А"}
+        ],
+
+        [
+            {picture:"🍅", name:"помидор", letter:"П"},
+            {picture:"🧊", name:"лёд", letter:"Ь"},
+            {picture:"🦔", name:"ёж", letter:"Ё"},
+            {picture:"🎂", name:"торт", letter:"Т"}
+        ]
+    ],
+
+
+    /* УРОВЕНЬ 3
+       ЛИСА ИДЁТ
+    */
+
+    [
+        [
+            {picture:"🦊", name:"лиса", letter:"Л"},
+            {picture:"🦃", name:"индюк", letter:"И"},
+            {picture:"🐶", name:"собака", letter:"С"},
+            {picture:"🍉", name:"арбуз", letter:"А"}
+        ],
+
+        [
+            {picture:"🦃", name:"индюк", letter:"И"},
+            {picture:"🏠", name:"дом", letter:"Д"},
+            {picture:"🦔", name:"ёж", letter:"Ё"},
+            {picture:"🎂", name:"торт", letter:"Т"}
+        ]
+    ],
+
+
+    /* УРОВЕНЬ 4
+       МИША ЕСТ СУП
+    */
+
+    [
+        [
+            {picture:"🐭", name:"мышь", letter:"М"},
+            {picture:"🦃", name:"индюк", letter:"И"},
+            {picture:"🎈", name:"шар", letter:"Ш"},
+            {picture:"🍉", name:"арбуз", letter:"А"}
+        ],
+
+        [
+            {picture:"🦝", name:"енот", letter:"Е"},
+            {picture:"🐶", name:"собака", letter:"С"},
+            {picture:"🎂", name:"торт", letter:"Т"}
+        ],
+
+        [
+            {picture:"🐶", name:"собака", letter:"С"},
+            {picture:"🦆", name:"утка", letter:"У"},
+            {picture:"🍅", name:"помидор", letter:"П"}
+        ]
+    ]
 
 ];
 
 
-/* Русская клавиатура */
+/* Русская клавиатура А–Я */
 
-const alphabet =
-"ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ";
+const ALPHABET = [
+"А","Б","В","Г","Д","Е","Ё","Ж","З","И","Й",
+"К","Л","М","Н","О","П","Р","С","Т","У","Ф",
+"Х","Ц","Ч","Ш","Щ","Ъ","Ы","Ь","Э","Ю","Я"
+];
 
 
 let currentLevel = 0;
-let currentLetter = 0;
+
+let flatLetters = [];
+
+let currentLetterIndex = 0;
 
 
-/* Элементы страницы */
+/* DOM */
 
-const secretArea =
-    document.getElementById("secretArea");
+const game =
+    document.getElementById("game");
+
+const secretSentence =
+    document.getElementById("secretSentence");
 
 const keyboard =
     document.getElementById("keyboard");
@@ -258,202 +776,620 @@ const keyboard =
 const message =
     document.getElementById("message");
 
-const nextButton =
-    document.getElementById("nextButton");
-
 const progress =
     document.getElementById("progress");
 
+const nextButton =
+    document.getElementById("nextButton");
 
-/* ==========================================
-   СОЗДАНИЕ КЛАВИАТУРЫ
-========================================== */
+const finish =
+    document.getElementById("finish");
 
-function createKeyboard() {
+const restart =
+    document.getElementById("restart");
+
+
+/* =========================================================
+   ЗВУК
+========================================================= */
+
+let audioContext = null;
+
+
+function playCorrectSound(){
+
+    try{
+
+        if(!audioContext){
+
+            audioContext =
+                new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }
+
+
+        const oscillator =
+            audioContext.createOscillator();
+
+        const gain =
+            audioContext.createGain();
+
+
+        oscillator.type = "sine";
+
+        oscillator.frequency.setValueAtTime(
+            520,
+            audioContext.currentTime
+        );
+
+        oscillator.frequency.exponentialRampToValueAtTime(
+            760,
+            audioContext.currentTime + .12
+        );
+
+
+        gain.gain.setValueAtTime(
+            .12,
+            audioContext.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            audioContext.currentTime + .18
+        );
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audioContext.destination
+        );
+
+
+        oscillator.start();
+
+        oscillator.stop(
+            audioContext.currentTime + .18
+        );
+
+    }
+
+    catch(error){
+
+        console.log(
+            "Звук недоступен"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   КЛАВИАТУРА
+========================================================= */
+
+function createKeyboard(){
 
     keyboard.innerHTML = "";
 
-    for (const letter of alphabet) {
+
+    ALPHABET.forEach(letter=>{
 
         const button =
             document.createElement("button");
 
         button.className = "key";
+
         button.textContent = letter;
+
+        button.dataset.letter = letter;
+
 
         button.addEventListener(
             "click",
-            () => chooseLetter(letter)
+            ()=>checkLetter(letter,button)
         );
 
+
         keyboard.appendChild(button);
-    }
+
+    });
+
 }
 
 
-/* ==========================================
-   ЗАГРУЗКА УРОВНЯ
-========================================== */
+/* =========================================================
+   СОЗДАНИЕ УРОВНЯ
+========================================================= */
 
-function loadLevel() {
+function loadLevel(){
 
-    const level =
-        levels[currentLevel];
-
-    currentLetter = 0;
-
-    secretArea.innerHTML = "";
+    secretSentence.innerHTML = "";
 
     message.textContent = "";
 
-    nextButton.style.visibility = "hidden";
+    message.className = "message";
 
-    progress.textContent =
-        `${currentLevel + 1} / ${levels.length}`;
+    nextButton.classList.remove("show");
+
+    currentLetterIndex = 0;
+
+    flatLetters = [];
 
 
-    level.pictures.forEach(
-        (picture, index) => {
+    const level =
+        LEVELS[currentLevel];
 
-            const item =
+
+    level.forEach(word=>{
+
+        const wordElement =
+            document.createElement("div");
+
+        wordElement.className =
+            "secret-word";
+
+
+        word.forEach(item=>{
+
+            flatLetters.push(item);
+
+
+            const letterItem =
                 document.createElement("div");
 
-            item.className =
-                "secret-item";
+            letterItem.className =
+                "secret-letter";
 
 
-            const pictureBox =
+            const picture =
                 document.createElement("div");
 
-            pictureBox.className =
+            picture.className =
                 "picture";
 
-            pictureBox.textContent =
-                picture;
+            picture.textContent =
+                item.picture;
 
-            pictureBox.title =
-                level.names[index];
+            picture.title =
+                item.name;
 
 
-            const answer =
+            const box =
                 document.createElement("div");
 
-            answer.className =
-                "answer-box";
-
-            answer.dataset.index =
-                index;
+            box.className =
+                "letter-box";
 
 
-            item.appendChild(
-                pictureBox
+            letterItem.appendChild(
+                picture
             );
 
-            item.appendChild(
-                answer
+            letterItem.appendChild(
+                box
             );
 
-            secretArea.appendChild(
-                item
+            wordElement.appendChild(
+                letterItem
             );
-        }
-    );
+
+        });
+
+
+        secretSentence.appendChild(
+            wordElement
+        );
+
+    });
+
+
+    progress.textContent =
+        `${currentLevel + 1} / ${LEVELS.length}`;
+
+
+    updateCurrentBox();
+
 }
 
 
-/* ==========================================
-   ВЫБОР БУКВЫ
-========================================== */
+/* =========================================================
+   АКТИВНАЯ КЛЕТКА
+========================================================= */
 
-function chooseLetter(letter) {
+function updateCurrentBox(){
 
-    const level =
-        levels[currentLevel];
+    const boxes =
+        document.querySelectorAll(
+            ".letter-box"
+        );
 
-    if (
-        currentLetter >=
-        level.answer.length
-    ) {
+    const pictures =
+        document.querySelectorAll(
+            ".picture"
+        );
+
+
+    boxes.forEach(box=>
+        box.classList.remove("current")
+    );
+
+
+    pictures.forEach(pic=>
+        pic.classList.remove("active")
+    );
+
+
+    if(
+        currentLetterIndex <
+        boxes.length
+    ){
+
+        boxes[
+            currentLetterIndex
+        ].classList.add(
+            "current"
+        );
+
+
+        pictures[
+            currentLetterIndex
+        ].classList.add(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ПРОВЕРКА БУКВЫ
+========================================================= */
+
+function checkLetter(
+    selectedLetter,
+    button
+){
+
+    if(
+        currentLetterIndex >=
+        flatLetters.length
+    ){
         return;
     }
 
 
     const correctLetter =
-        level.answer[currentLetter];
+        flatLetters[
+            currentLetterIndex
+        ].letter;
 
 
-    if (letter === correctLetter) {
+    if(
+        selectedLetter ===
+        correctLetter
+    ){
 
         const boxes =
             document.querySelectorAll(
-                ".answer-box"
+                ".letter-box"
             );
 
-        boxes[currentLetter]
-            .textContent = letter;
 
-        boxes[currentLetter]
-            .classList.add("correct");
+        boxes[
+            currentLetterIndex
+        ].textContent =
+            selectedLetter;
 
 
-        currentLetter++;
+        boxes[
+            currentLetterIndex
+        ].classList.remove(
+            "current"
+        );
 
+
+        boxes[
+            currentLetterIndex
+        ].classList.add(
+            "correct"
+        );
+
+
+        playCorrectSound();
+
+        createStars(
+            boxes[
+                currentLetterIndex
+            ]
+        );
+
+
+        currentLetterIndex++;
+
+
+        message.className =
+            "message";
 
         message.textContent =
             "✅ Верно!";
 
 
-        if (
-            currentLetter ===
-            level.answer.length
-        ) {
+        updateCurrentBox();
+
+
+        if(
+            currentLetterIndex ===
+            flatLetters.length
+        ){
 
             message.textContent =
-                "🎉 Послание разгадано!";
+                "🎉 Секретное послание разгадано!";
 
-            nextButton.style.visibility =
-                "visible";
+
+            setTimeout(()=>{
+
+                nextButton.classList.add(
+                    "show"
+                );
+
+            },400);
+
         }
 
     }
 
-    else {
+    else{
+
+        message.className =
+            "message error";
 
         message.textContent =
             "Попробуй ещё раз 🙂";
+
+
+        button.classList.remove(
+            "wrong"
+        );
+
+
+        void button.offsetWidth;
+
+
+        button.classList.add(
+            "wrong"
+        );
+
     }
+
 }
 
 
-/* ==========================================
-   СЛЕДУЮЩИЙ УРОВЕНЬ
-========================================== */
+/* =========================================================
+   ЗВЁЗДОЧКИ
+========================================================= */
+
+function createStars(element){
+
+    const rect =
+        element.getBoundingClientRect();
+
+    const gameRect =
+        game.getBoundingClientRect();
+
+
+    const centerX =
+        rect.left -
+        gameRect.left +
+        rect.width / 2;
+
+    const centerY =
+        rect.top -
+        gameRect.top +
+        rect.height / 2;
+
+
+    const symbols =
+        ["⭐","✨","💫"];
+
+
+    for(let i=0;i<6;i++){
+
+        const star =
+            document.createElement("div");
+
+        star.className =
+            "star";
+
+
+        star.textContent =
+            symbols[
+                Math.floor(
+                    Math.random() *
+                    symbols.length
+                )
+            ];
+
+
+        star.style.left =
+            centerX + "px";
+
+        star.style.top =
+            centerY + "px";
+
+
+        star.style.setProperty(
+            "--x",
+            (
+                Math.random()*120-60
+            )+"px"
+        );
+
+        star.style.setProperty(
+            "--y",
+            (
+                Math.random()*100-70
+            )+"px"
+        );
+
+
+        game.appendChild(
+            star
+        );
+
+
+        setTimeout(
+            ()=>star.remove(),
+            850
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   СЛЕДУЮЩЕЕ ЗАДАНИЕ
+========================================================= */
 
 nextButton.addEventListener(
     "click",
-    () => {
+    ()=>{
 
         currentLevel++;
 
-        if (
+
+        if(
             currentLevel >=
-            levels.length
-        ) {
+            LEVELS.length
+        ){
 
-            currentLevel = 0;
+            showFinish();
 
-            message.textContent =
-                "🏆 Все задания выполнены!";
+            return;
+
         }
 
+
         loadLevel();
+
     }
 );
 
 
-/* ==========================================
+/* =========================================================
+   ФИНАЛ
+========================================================= */
+
+function showFinish(){
+
+    finish.classList.add(
+        "show"
+    );
+
+    playFinalSound();
+
+}
+
+
+function playFinalSound(){
+
+    try{
+
+        if(!audioContext){
+
+            audioContext =
+                new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }
+
+
+        const notes =
+            [523,659,784,1046];
+
+
+        notes.forEach(
+            (frequency,index)=>{
+
+                const oscillator =
+                    audioContext.createOscillator();
+
+                const gain =
+                    audioContext.createGain();
+
+
+                oscillator.frequency.value =
+                    frequency;
+
+
+                gain.gain.value =
+                    .08;
+
+
+                oscillator.connect(
+                    gain
+                );
+
+                gain.connect(
+                    audioContext.destination
+                );
+
+
+                const start =
+                    audioContext.currentTime +
+                    index*.12;
+
+
+                oscillator.start(
+                    start
+                );
+
+
+                oscillator.stop(
+                    start+.18
+                );
+
+            }
+        );
+
+    }
+
+    catch(error){}
+
+}
+
+
+/* =========================================================
+   НАЧАТЬ ЗАНОВО
+========================================================= */
+
+restart.addEventListener(
+    "click",
+    ()=>{
+
+        currentLevel = 0;
+
+        finish.classList.remove(
+            "show"
+        );
+
+        loadLevel();
+
+    }
+);
+
+
+/* =========================================================
    ЗАПУСК
-========================================== */
+========================================================= */
 
 createKeyboard();
 
