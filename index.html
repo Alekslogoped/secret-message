@@ -3,18 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Секретное послание</title>
 
 <style>
+
+/* =========================================================
+   ОСНОВНЫЕ НАСТРОЙКИ
+========================================================= */
+
 :root{
     --purple:#7559b7;
     --purple-dark:#59408f;
-    --pink:#f2a9ca;
-    --blue:#a8d9f4;
-    --cream:#fffaf4;
-    --green:#7bc58a;
+    --purple-light:#e9ddff;
+
+    --pink:#f3b5d4;
+    --blue:#b9def5;
+
+    --green:#78c98b;
     --red:#ef7f86;
-    --text:#463b59;
+
+    --text:#4d405f;
 }
 
 *{
@@ -22,12 +31,18 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
     margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:"Trebuchet MS",Arial,sans-serif;
+
+    font-family:
+        "Trebuchet MS",
+        Arial,
+        sans-serif;
+
     background:#e8e0f6;
 }
 
@@ -37,13 +52,16 @@ body{
     align-items:center;
 }
 
-/* =========================
-   ОСНОВНОЕ ПОЛЕ 16:9
-========================= */
+
+/* =========================================================
+   ИГРОВОЕ ПОЛЕ 16:9
+========================================================= */
 
 .game{
+
     width:100vw;
     height:100vh;
+
     max-width:177.78vh;
     max-height:56.25vw;
 
@@ -56,349 +74,683 @@ body{
 
     padding:2vh 3vw;
 
-    background:
-        radial-gradient(circle at 12% 15%,rgba(255,255,255,.9) 0 3%,transparent 3.2%),
-        radial-gradient(circle at 88% 18%,rgba(255,255,255,.7) 0 2.5%,transparent 2.7%),
-        linear-gradient(135deg,#fff8f1 0%,#f8efff 45%,#eaf6ff 100%);
+    /* ФОН ИГРЫ */
+
+    background-image:url("fon.png");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
 }
 
-/* декоративные пятна */
-
-.game::before{
-    content:"";
-    position:absolute;
-    width:24vw;
-    height:24vw;
-    left:-8vw;
-    bottom:-12vw;
-    border-radius:50%;
-    background:rgba(242,169,202,.25);
-}
-
-.game::after{
-    content:"";
-    position:absolute;
-    width:25vw;
-    height:25vw;
-    right:-10vw;
-    top:-12vw;
-    border-radius:50%;
-    background:rgba(168,217,244,.30);
-}
 
 .content{
-    width:100%;
-    height:100%;
+
     position:relative;
     z-index:2;
 
+    width:100%;
+    height:100%;
+
     display:flex;
     flex-direction:column;
     align-items:center;
 }
 
-/* =========================
-   ВЕРХ
-========================= */
+
+/* =========================================================
+   ВЕРХНЯЯ ЧАСТЬ
+========================================================= */
 
 .topbar{
+
     width:100%;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     position:relative;
-}
-
-.title{
-    margin:0;
-    color:var(--purple-dark);
-    font-size:clamp(22px,3vw,46px);
-    font-weight:900;
-    text-align:center;
-}
-
-.progress{
-    position:absolute;
-    right:0;
-    top:0;
-
-    padding:.6em 1em;
-    background:rgba(255,255,255,.85);
-    border:2px solid rgba(117,89,183,.15);
-    border-radius:999px;
-
-    color:var(--purple-dark);
-    font-weight:800;
-    font-size:clamp(12px,1.3vw,18px);
-
-    box-shadow:0 6px 18px rgba(80,60,110,.10);
-}
-
-.instruction{
-    margin:.6vh 0 1vh;
-    text-align:center;
-    color:#675d72;
-    font-size:clamp(13px,1.45vw,20px);
-}
-
-/* =========================
-   ПАНЕЛЬ ЗАДАНИЯ
-========================= */
-
-.task-card{
-    width:min(94%,1200px);
-    flex:1;
-
-    background:rgba(255,255,255,.78);
-    border:2px solid rgba(255,255,255,.9);
-    border-radius:28px;
-
-    box-shadow:
-        0 15px 40px rgba(74,54,100,.12),
-        inset 0 0 0 1px rgba(117,89,183,.05);
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-
-    padding:1.2vh 2vw;
-    min-height:0;
-}
-
-.secret-sentence{
-    width:100%;
-
-    display:flex;
-    justify-content:center;
-    align-items:flex-end;
-    flex-wrap:wrap;
-
-    gap:clamp(16px,3vw,45px);
-}
-
-/* отдельное слово */
-
-.secret-word{
-    display:flex;
-    gap:clamp(5px,.65vw,10px);
-}
-
-/* буква + картинка */
-
-.secret-letter{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:.6vh;
-}
-
-.picture{
-    width:clamp(48px,6.2vw,92px);
-    height:clamp(48px,6.2vw,92px);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:white;
-    border-radius:18px;
-
-    font-size:clamp(30px,4.5vw,65px);
-
-    box-shadow:
-        0 6px 16px rgba(74,54,100,.10);
-
-    border:2px solid #f3edf8;
-
-    transition:.2s;
-}
-
-.picture.active{
-    transform:translateY(-4px);
-    border-color:var(--purple);
-    box-shadow:
-        0 8px 22px rgba(117,89,183,.25);
-}
-
-.letter-box{
-    width:clamp(38px,4.8vw,67px);
-    height:clamp(38px,4.8vw,67px);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:#fff;
-    border:3px solid #d9cdec;
-    border-radius:12px;
-
-    font-size:clamp(21px,2.7vw,38px);
-    font-weight:900;
-    color:var(--purple-dark);
-
-    transition:.2s;
-}
-
-.letter-box.current{
-    border-color:var(--purple);
-    box-shadow:0 0 0 4px rgba(117,89,183,.12);
-}
-
-.letter-box.correct{
-    background:#e5f7e8;
-    border-color:var(--green);
-    animation:pop .25s ease;
-}
-
-@keyframes pop{
-    50%{transform:scale(1.16);}
-}
-
-/* =========================
-   СООБЩЕНИЕ
-========================= */
-
-.message{
-    height:4.5vh;
-    min-height:25px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:clamp(14px,1.55vw,21px);
-    font-weight:900;
-    color:var(--purple-dark);
-}
-
-.message.error{
-    color:#c84f59;
-    animation:shake .25s linear;
-}
-
-@keyframes shake{
-    25%{transform:translateX(-6px);}
-    50%{transform:translateX(6px);}
-    75%{transform:translateX(-4px);}
-}
-
-/* =========================
-   КЛАВИАТУРА
-========================= */
-
-.keyboard{
-    width:min(94%,1050px);
-
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-
-    gap:clamp(3px,.45vw,7px);
-
-    margin-top:.5vh;
-}
-
-.key{
-    width:clamp(31px,3.7vw,52px);
-    height:clamp(31px,3.7vw,52px);
-
-    border:0;
-    border-radius:10px;
-
-    background:white;
-
-    color:#514165;
-
-    font-size:clamp(14px,1.6vw,21px);
-    font-weight:900;
-
-    cursor:pointer;
-
-    box-shadow:
-        0 4px 10px rgba(65,48,90,.13);
-
-    transition:
-        transform .12s,
-        background .12s;
-}
-
-.key:hover{
-    background:#f1e9ff;
-    transform:translateY(-2px);
-}
-
-.key:active{
-    transform:scale(.92);
-}
-
-.key.wrong{
-    animation:keyWrong .25s;
-    background:#ffe3e5;
-}
-
-@keyframes keyWrong{
-    50%{transform:scale(.82);}
-}
-
-/* =========================
-   НИЖНЯЯ ЧАСТЬ
-========================= */
-
-.bottom{
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
 
     min-height:7vh;
 }
 
-.next-btn{
-    border:0;
 
-    padding:.7em 1.7em;
+.title{
+
+    margin:0;
+
+    padding:.25em .8em;
+
+    color:var(--purple-dark);
+
+    font-size:
+        clamp(24px,3vw,46px);
+
+    font-weight:900;
+
+    text-align:center;
+
+    background:
+        rgba(255,255,255,.68);
 
     border-radius:999px;
 
+    box-shadow:
+        0 5px 18px
+        rgba(70,50,100,.08);
+
+    backdrop-filter:
+        blur(4px);
+}
+
+
+.progress{
+
+    position:absolute;
+
+    right:1vw;
+    top:.3vh;
+
+    padding:.55em 1em;
+
     background:
-        linear-gradient(135deg,#8d70cc,#7253b4);
+        rgba(255,255,255,.85);
 
-    color:white;
+    border:
+        2px solid
+        rgba(117,89,183,.15);
 
-    font-size:clamp(14px,1.5vw,20px);
+    border-radius:999px;
+
+    color:
+        var(--purple-dark);
+
+    font-weight:900;
+
+    font-size:
+        clamp(12px,1.3vw,18px);
+
+    box-shadow:
+        0 5px 15px
+        rgba(80,60,110,.10);
+}
+
+
+/* =========================================================
+   ИНСТРУКЦИЯ
+========================================================= */
+
+.instruction{
+
+    margin:.6vh 0 .8vh;
+
+    padding:.35em 1.2em;
+
+    text-align:center;
+
+    color:#62556f;
+
+    font-size:
+        clamp(13px,1.4vw,19px);
+
+    font-weight:700;
+
+    background:
+        rgba(255,255,255,.58);
+
+    border-radius:999px;
+
+    backdrop-filter:
+        blur(3px);
+}
+
+
+/* =========================================================
+   ОБЛАСТЬ С ШИФРОМ
+========================================================= */
+
+.task-area{
+
+    width:100%;
+
+    flex:1;
+
+    min-height:0;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:
+        1vh 3vw;
+}
+
+
+.secret-sentence{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:flex-end;
+
+    flex-wrap:wrap;
+
+    gap:
+        clamp(
+            20px,
+            3vw,
+            50px
+        );
+}
+
+
+/* =========================================================
+   ОТДЕЛЬНОЕ СЛОВО
+========================================================= */
+
+.secret-word{
+
+    display:flex;
+
+    gap:
+        clamp(
+            5px,
+            .7vw,
+            10px
+        );
+
+    padding:
+        clamp(
+            8px,
+            1vw,
+            14px
+        );
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.34);
+
+    box-shadow:
+        0 7px 22px
+        rgba(80,60,110,.07);
+
+    backdrop-filter:
+        blur(2px);
+}
+
+
+/* =========================================================
+   КАРТИНКА + КЛЕТКА
+========================================================= */
+
+.secret-letter{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:.7vh;
+}
+
+
+/* КАРТИНКА */
+
+.picture{
+
+    width:
+        clamp(
+            54px,
+            6.5vw,
+            95px
+        );
+
+    height:
+        clamp(
+            54px,
+            6.5vw,
+            95px
+        );
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    background:
+        rgba(255,255,255,.94);
+
+    border-radius:20px;
+
+    font-size:
+        clamp(
+            32px,
+            4.7vw,
+            67px
+        );
+
+    border:
+        3px solid
+        rgba(255,255,255,.95);
+
+    box-shadow:
+        0 7px 18px
+        rgba(68,49,92,.13);
+
+    transition:
+        transform .2s,
+        border .2s,
+        box-shadow .2s;
+}
+
+
+/* ТЕКУЩАЯ КАРТИНКА */
+
+.picture.active{
+
+    transform:
+        translateY(-5px)
+        scale(1.04);
+
+    border-color:
+        #9a7ad2;
+
+    box-shadow:
+        0 9px 24px
+        rgba(117,89,183,.28);
+}
+
+
+/* =========================================================
+   КЛЕТКА ДЛЯ БУКВЫ
+========================================================= */
+
+.letter-box{
+
+    width:
+        clamp(
+            40px,
+            4.8vw,
+            68px
+        );
+
+    height:
+        clamp(
+            40px,
+            4.8vw,
+            68px
+        );
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    background:
+        rgba(255,255,255,.95);
+
+    border:
+        3px solid
+        #d3c1ec;
+
+    border-radius:13px;
+
+    font-size:
+        clamp(
+            22px,
+            2.8vw,
+            39px
+        );
+
+    font-weight:900;
+
+    color:
+        var(--purple-dark);
+
+    box-shadow:
+        0 4px 10px
+        rgba(75,55,100,.10);
+
+    transition:.2s;
+}
+
+
+/* АКТИВНАЯ КЛЕТКА */
+
+.letter-box.current{
+
+    border-color:
+        var(--purple);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(117,89,183,.14),
+        0 5px 13px
+        rgba(70,50,100,.10);
+}
+
+
+/* ПРАВИЛЬНАЯ БУКВА */
+
+.letter-box.correct{
+
+    background:
+        #e2f6e6;
+
+    border-color:
+        var(--green);
+
+    animation:
+        correctPop .28s ease;
+}
+
+
+@keyframes correctPop{
+
+    50%{
+        transform:
+            scale(1.18);
+    }
+
+}
+
+
+/* =========================================================
+   СООБЩЕНИЯ
+========================================================= */
+
+.message{
+
+    height:4.5vh;
+
+    min-height:26px;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:
+        0 1em;
+
+    font-size:
+        clamp(
+            14px,
+            1.5vw,
+            20px
+        );
+
+    font-weight:900;
+
+    color:
+        var(--purple-dark);
+
+    text-shadow:
+        0 1px 2px white;
+}
+
+
+.message.error{
+
+    color:#c64d59;
+
+    animation:
+        shake .28s linear;
+}
+
+
+@keyframes shake{
+
+    25%{
+        transform:
+            translateX(-6px);
+    }
+
+    50%{
+        transform:
+            translateX(6px);
+    }
+
+    75%{
+        transform:
+            translateX(-4px);
+    }
+
+}
+
+
+/* =========================================================
+   КЛАВИАТУРА
+========================================================= */
+
+.keyboard{
+
+    width:min(
+        94%,
+        1050px
+    );
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:
+        clamp(
+            4px,
+            .45vw,
+            7px
+        );
+
+    padding:
+        .8vh 1vw;
+
+    background:
+        rgba(255,255,255,.38);
+
+    border-radius:22px;
+
+    backdrop-filter:
+        blur(3px);
+
+    box-shadow:
+        0 7px 20px
+        rgba(75,55,100,.07);
+}
+
+
+/* КНОПКИ КЛАВИАТУРЫ */
+
+.key{
+
+    width:
+        clamp(
+            32px,
+            3.7vw,
+            52px
+        );
+
+    height:
+        clamp(
+            32px,
+            3.7vw,
+            52px
+        );
+
+    border:0;
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.96);
+
+    color:
+        #514165;
+
+    font-size:
+        clamp(
+            14px,
+            1.6vw,
+            21px
+        );
+
     font-weight:900;
 
     cursor:pointer;
 
     box-shadow:
-        0 7px 18px rgba(89,64,143,.25);
+        0 4px 10px
+        rgba(65,48,90,.15);
+
+    transition:
+        transform .12s,
+        background .12s,
+        box-shadow .12s;
+}
+
+
+.key:hover{
+
+    background:
+        #f1e9ff;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 6px 13px
+        rgba(65,48,90,.18);
+}
+
+
+.key:active{
+
+    transform:
+        scale(.92);
+}
+
+
+/* НЕПРАВИЛЬНАЯ БУКВА */
+
+.key.wrong{
+
+    animation:
+        keyWrong .28s;
+
+    background:
+        #ffe1e4;
+}
+
+
+@keyframes keyWrong{
+
+    50%{
+        transform:
+            scale(.82);
+    }
+
+}
+
+
+/* =========================================================
+   НИЖНЯЯ ПАНЕЛЬ
+========================================================= */
+
+.bottom{
+
+    width:100%;
+
+    min-height:7vh;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+}
+
+
+/* =========================================================
+   КНОПКА ДАЛЬШЕ
+========================================================= */
+
+.next-btn{
+
+    border:0;
+
+    padding:
+        .7em 1.8em;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #9477d1,
+            #7050b0
+        );
+
+    color:white;
+
+    font-size:
+        clamp(
+            14px,
+            1.5vw,
+            20px
+        );
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 7px 18px
+        rgba(89,64,143,.28);
 
     opacity:0;
+
     pointer-events:none;
 
-    transform:translateY(10px);
+    transform:
+        translateY(8px);
 
     transition:.25s;
 }
 
+
 .next-btn.show{
+
     opacity:1;
+
     pointer-events:auto;
-    transform:translateY(0);
+
+    transform:
+        translateY(0);
 }
+
 
 .next-btn:hover{
-    transform:scale(1.04);
+
+    transform:
+        scale(1.04);
 }
 
-/* =========================
-   ФИНАЛ
-========================= */
+
+/* =========================================================
+   ФИНАЛЬНЫЙ ЭКРАН
+========================================================= */
 
 .finish{
+
     position:absolute;
+
     inset:0;
+
     z-index:20;
 
     display:none;
@@ -407,90 +759,162 @@ body{
     align-items:center;
 
     background:
-        linear-gradient(135deg,#fff6fc,#edf7ff);
+        rgba(245,238,255,.72);
+
+    backdrop-filter:
+        blur(6px);
 }
 
+
 .finish.show{
+
     display:flex;
 }
 
+
 .finish-card{
+
     text-align:center;
 
-    background:white;
+    background:
+        rgba(255,255,255,.94);
 
-    padding:5vh 6vw;
+    padding:
+        4vh 6vw;
 
     border-radius:35px;
 
     box-shadow:
-        0 20px 50px rgba(78,55,105,.18);
+        0 20px 50px
+        rgba(78,55,105,.20);
 
-    animation:finishIn .5s ease;
+    animation:
+        finishIn .5s ease;
 }
+
 
 @keyframes finishIn{
+
     from{
+
         opacity:0;
-        transform:scale(.7);
+
+        transform:
+            scale(.7);
     }
+
 }
+
 
 .finish-icon{
-    font-size:clamp(60px,9vw,130px);
+
+    font-size:
+        clamp(
+            65px,
+            9vw,
+            130px
+        );
 }
+
 
 .finish h2{
-    margin:.3em 0;
 
-    font-size:clamp(28px,4vw,60px);
+    margin:.2em 0;
 
-    color:var(--purple-dark);
+    font-size:
+        clamp(
+            30px,
+            4vw,
+            60px
+        );
+
+    color:
+        var(--purple-dark);
 }
+
 
 .finish p{
-    font-size:clamp(16px,2vw,27px);
-    color:#70657b;
+
+    font-size:
+        clamp(
+            16px,
+            2vw,
+            27px
+        );
+
+    color:
+        #70657b;
 }
 
+
 .restart{
+
     border:0;
+
     border-radius:999px;
 
-    padding:.8em 1.7em;
+    padding:
+        .8em 1.8em;
 
-    background:var(--purple);
+    background:
+        var(--purple);
 
     color:white;
 
-    font-size:clamp(15px,1.5vw,20px);
+    font-size:
+        clamp(
+            15px,
+            1.5vw,
+            20px
+        );
+
     font-weight:900;
 
     cursor:pointer;
 }
 
-/* =========================
+
+/* =========================================================
    ЗВЁЗДОЧКИ
-========================= */
+========================================================= */
 
 .star{
+
     position:absolute;
-    pointer-events:none;
+
     z-index:30;
 
-    font-size:25px;
+    pointer-events:none;
 
-    animation:starFly .8s ease-out forwards;
+    font-size:
+        clamp(
+            18px,
+            2vw,
+            28px
+        );
+
+    animation:
+        starFly .8s
+        ease-out
+        forwards;
 }
 
+
 @keyframes starFly{
+
     0%{
+
         opacity:1;
-        transform:translate(0,0) scale(.5);
+
+        transform:
+            translate(0,0)
+            scale(.5);
     }
 
     100%{
+
         opacity:0;
+
         transform:
             translate(
                 var(--x),
@@ -499,59 +923,89 @@ body{
             rotate(180deg)
             scale(1.4);
     }
+
 }
 
-/* =========================
-   МОБИЛЬНАЯ АДАПТАЦИЯ
-========================= */
+
+/* =========================================================
+   АДАПТАЦИЯ
+========================================================= */
 
 @media(max-aspect-ratio:4/3){
 
-    html,body{
+    html,
+    body{
         overflow:auto;
     }
 
+
     .game{
+
         width:100%;
+
         height:auto;
+
         min-height:100vh;
 
         max-width:none;
         max-height:none;
 
         padding:15px;
+
+        background-size:cover;
     }
 
-    .task-card{
-        min-height:45vh;
+
+    .task-area{
+
+        min-height:42vh;
     }
+
 
     .progress{
+
         position:relative;
+
         right:auto;
         top:auto;
+
         margin-left:10px;
     }
 
+
     .secret-sentence{
-        margin:15px 0;
+
+        margin:
+            15px 0;
     }
 
 }
+
 </style>
 </head>
 
+
 <body>
 
-<main class="game" id="game">
+
+<main
+    class="game"
+    id="game">
+
 
 <div class="content">
+
+
+    <!-- ЗАГОЛОВОК -->
 
     <div class="topbar">
 
         <h1 class="title">
+
             🔐 Секретное послание
+
         </h1>
+
 
         <div
             class="progress"
@@ -561,13 +1015,22 @@ body{
     </div>
 
 
+
+    <!-- ИНСТРУКЦИЯ -->
+
     <div class="instruction">
-        Назови картинки и определи первую букву каждого слова.
-        Расшифруй секретное предложение!
+
+        Назови картинки.
+        Определи первую букву каждого слова
+        и расшифруй послание!
+
     </div>
 
 
-    <section class="task-card">
+
+    <!-- ЗАДАНИЕ -->
+
+    <section class="task-area">
 
         <div
             class="secret-sentence"
@@ -577,17 +1040,26 @@ body{
     </section>
 
 
+
+    <!-- СООБЩЕНИЕ -->
+
     <div
         class="message"
         id="message">
     </div>
 
 
+
+    <!-- КЛАВИАТУРА -->
+
     <div
         class="keyboard"
         id="keyboard">
     </div>
 
+
+
+    <!-- КНОПКА ДАЛЬШЕ -->
 
     <div class="bottom">
 
@@ -601,28 +1073,43 @@ body{
 
     </div>
 
+
 </div>
 
 
-<!-- ФИНАЛ -->
+
+<!-- =====================================================
+     ФИНАЛ
+===================================================== -->
 
 <div
     class="finish"
     id="finish">
 
+
     <div class="finish-card">
 
+
         <div class="finish-icon">
+
             🏆
+
         </div>
 
+
         <h2>
+
             Молодец!
+
         </h2>
 
+
         <p>
+
             Все секретные послания разгаданы!
+
         </p>
+
 
         <button
             class="restart"
@@ -632,127 +1119,345 @@ body{
 
         </button>
 
+
     </div>
 
+
 </div>
+
 
 </main>
 
 
+
 <script>
+
 
 /* =========================================================
    НАСТРОЙКИ ПЕДАГОГА
 
-   Именно здесь позже будем менять задания.
-
-   picture — пока эмодзи.
-   Позже сюда поставим PNG-картинки.
-
-   name — название картинки.
-   letter — буква, которую она шифрует.
+   ПОЗЖЕ ИМЕННО ЗДЕСЬ БУДЕМ МЕНЯТЬ
+   КАРТИНКИ И ПРЕДЛОЖЕНИЯ
 ========================================================= */
 
 
 const LEVELS = [
 
-    /* УРОВЕНЬ 1
-       КОТ СПИТ
-    */
+
+/* =========================================================
+   УРОВЕНЬ 1
+
+   КОТ СПИТ
+========================================================= */
+
+[
 
     [
-        [
-            {picture:"🐱", name:"кот", letter:"К"},
-            {picture:"🥒", name:"огурец", letter:"О"},
-            {picture:"🎂", name:"торт", letter:"Т"}
-        ],
 
-        [
-            {picture:"🐶", name:"собака", letter:"С"},
-            {picture:"🍅", name:"помидор", letter:"П"},
-            {picture:"🦃", name:"индюк", letter:"И"},
-            {picture:"🎂", name:"торт", letter:"Т"}
-        ]
+        {
+            picture:"🐱",
+            name:"кот",
+            letter:"К"
+        },
+
+        {
+            picture:"🥒",
+            name:"огурец",
+            letter:"О"
+        },
+
+        {
+            picture:"🎂",
+            name:"торт",
+            letter:"Т"
+        }
+
     ],
 
 
-    /* УРОВЕНЬ 2
-       МАМА ПЬЁТ
-    */
-
     [
-        [
-            {picture:"🐭", name:"мышь", letter:"М"},
-            {picture:"🍉", name:"арбуз", letter:"А"},
-            {picture:"🐭", name:"мышь", letter:"М"},
-            {picture:"🍉", name:"арбуз", letter:"А"}
-        ],
 
-        [
-            {picture:"🍅", name:"помидор", letter:"П"},
-            {picture:"🧊", name:"лёд", letter:"Ь"},
-            {picture:"🦔", name:"ёж", letter:"Ё"},
-            {picture:"🎂", name:"торт", letter:"Т"}
-        ]
-    ],
+        {
+            picture:"🐶",
+            name:"собака",
+            letter:"С"
+        },
 
+        {
+            picture:"🍅",
+            name:"помидор",
+            letter:"П"
+        },
 
-    /* УРОВЕНЬ 3
-       ЛИСА ИДЁТ
-    */
+        {
+            picture:"🦃",
+            name:"индюк",
+            letter:"И"
+        },
 
-    [
-        [
-            {picture:"🦊", name:"лиса", letter:"Л"},
-            {picture:"🦃", name:"индюк", letter:"И"},
-            {picture:"🐶", name:"собака", letter:"С"},
-            {picture:"🍉", name:"арбуз", letter:"А"}
-        ],
+        {
+            picture:"🎂",
+            name:"торт",
+            letter:"Т"
+        }
 
-        [
-            {picture:"🦃", name:"индюк", letter:"И"},
-            {picture:"🏠", name:"дом", letter:"Д"},
-            {picture:"🦔", name:"ёж", letter:"Ё"},
-            {picture:"🎂", name:"торт", letter:"Т"}
-        ]
-    ],
-
-
-    /* УРОВЕНЬ 4
-       МИША ЕСТ СУП
-    */
-
-    [
-        [
-            {picture:"🐭", name:"мышь", letter:"М"},
-            {picture:"🦃", name:"индюк", letter:"И"},
-            {picture:"🎈", name:"шар", letter:"Ш"},
-            {picture:"🍉", name:"арбуз", letter:"А"}
-        ],
-
-        [
-            {picture:"🦝", name:"енот", letter:"Е"},
-            {picture:"🐶", name:"собака", letter:"С"},
-            {picture:"🎂", name:"торт", letter:"Т"}
-        ],
-
-        [
-            {picture:"🐶", name:"собака", letter:"С"},
-            {picture:"🦆", name:"утка", letter:"У"},
-            {picture:"🍅", name:"помидор", letter:"П"}
-        ]
     ]
 
+],
+
+
+
+/* =========================================================
+   УРОВЕНЬ 2
+
+   МАМА ПЬЁТ
+
+   ВАЖНО:
+   позже этот уровень заменим,
+   потому что Ь нельзя нормально
+   зашифровать первой буквой картинки.
+========================================================= */
+
+[
+
+    [
+
+        {
+            picture:"🐭",
+            name:"мышь",
+            letter:"М"
+        },
+
+        {
+            picture:"🍉",
+            name:"арбуз",
+            letter:"А"
+        },
+
+        {
+            picture:"🐭",
+            name:"мышь",
+            letter:"М"
+        },
+
+        {
+            picture:"🍉",
+            name:"арбуз",
+            letter:"А"
+        }
+
+    ],
+
+
+    [
+
+        {
+            picture:"🍅",
+            name:"помидор",
+            letter:"П"
+        },
+
+        {
+            picture:"🧊",
+            name:"лёд",
+            letter:"Ь"
+        },
+
+        {
+            picture:"🦔",
+            name:"ёж",
+            letter:"Ё"
+        },
+
+        {
+            picture:"🎂",
+            name:"торт",
+            letter:"Т"
+        }
+
+    ]
+
+],
+
+
+
+/* =========================================================
+   УРОВЕНЬ 3
+
+   ЛИСА ИДЁТ
+========================================================= */
+
+[
+
+    [
+
+        {
+            picture:"🦊",
+            name:"лиса",
+            letter:"Л"
+        },
+
+        {
+            picture:"🦃",
+            name:"индюк",
+            letter:"И"
+        },
+
+        {
+            picture:"🐶",
+            name:"собака",
+            letter:"С"
+        },
+
+        {
+            picture:"🍉",
+            name:"арбуз",
+            letter:"А"
+        }
+
+    ],
+
+
+    [
+
+        {
+            picture:"🦃",
+            name:"индюк",
+            letter:"И"
+        },
+
+        {
+            picture:"🏠",
+            name:"дом",
+            letter:"Д"
+        },
+
+        {
+            picture:"🦔",
+            name:"ёж",
+            letter:"Ё"
+        },
+
+        {
+            picture:"🎂",
+            name:"торт",
+            letter:"Т"
+        }
+
+    ]
+
+],
+
+
+
+/* =========================================================
+   УРОВЕНЬ 4
+
+   МИША ЕСТ СУП
+========================================================= */
+
+[
+
+    [
+
+        {
+            picture:"🐭",
+            name:"мышь",
+            letter:"М"
+        },
+
+        {
+            picture:"🦃",
+            name:"индюк",
+            letter:"И"
+        },
+
+        {
+            picture:"🎈",
+            name:"шар",
+            letter:"Ш"
+        },
+
+        {
+            picture:"🍉",
+            name:"арбуз",
+            letter:"А"
+        }
+
+    ],
+
+
+    [
+
+        {
+            picture:"🦝",
+            name:"енот",
+            letter:"Е"
+        },
+
+        {
+            picture:"🐶",
+            name:"собака",
+            letter:"С"
+        },
+
+        {
+            picture:"🎂",
+            name:"торт",
+            letter:"Т"
+        }
+
+    ],
+
+
+    [
+
+        {
+            picture:"🐶",
+            name:"собака",
+            letter:"С"
+        },
+
+        {
+            picture:"🦆",
+            name:"утка",
+            letter:"У"
+        },
+
+        {
+            picture:"🍅",
+            name:"помидор",
+            letter:"П"
+        }
+
+    ]
+
+]
+
 ];
 
 
-/* Русская клавиатура А–Я */
+
+/* =========================================================
+   РУССКАЯ КЛАВИАТУРА
+========================================================= */
+
 
 const ALPHABET = [
-"А","Б","В","Г","Д","Е","Ё","Ж","З","И","Й",
-"К","Л","М","Н","О","П","Р","С","Т","У","Ф",
-"Х","Ц","Ч","Ш","Щ","Ъ","Ы","Ь","Э","Ю","Я"
+
+    "А","Б","В","Г","Д","Е","Ё",
+    "Ж","З","И","Й","К","Л","М",
+    "Н","О","П","Р","С","Т","У",
+    "Ф","Х","Ц","Ч","Ш","Щ","Ъ",
+    "Ы","Ь","Э","Ю","Я"
+
 ];
+
+
+
+/* =========================================================
+   СОСТОЯНИЕ ИГРЫ
+========================================================= */
 
 
 let currentLevel = 0;
@@ -761,231 +1466,251 @@ let flatLetters = [];
 
 let currentLetterIndex = 0;
 
-
-/* DOM */
-
-const game =
-    document.getElementById("game");
-
-const secretSentence =
-    document.getElementById("secretSentence");
-
-const keyboard =
-    document.getElementById("keyboard");
-
-const message =
-    document.getElementById("message");
-
-const progress =
-    document.getElementById("progress");
-
-const nextButton =
-    document.getElementById("nextButton");
-
-const finish =
-    document.getElementById("finish");
-
-const restart =
-    document.getElementById("restart");
-
-
-/* =========================================================
-   ЗВУК
-========================================================= */
-
 let audioContext = null;
 
 
-function playCorrectSound(){
 
-    try{
-
-        if(!audioContext){
-
-            audioContext =
-                new (
-                    window.AudioContext ||
-                    window.webkitAudioContext
-                )();
-
-        }
+/* =========================================================
+   ЭЛЕМЕНТЫ
+========================================================= */
 
 
-        const oscillator =
-            audioContext.createOscillator();
-
-        const gain =
-            audioContext.createGain();
-
-
-        oscillator.type = "sine";
-
-        oscillator.frequency.setValueAtTime(
-            520,
-            audioContext.currentTime
-        );
-
-        oscillator.frequency.exponentialRampToValueAtTime(
-            760,
-            audioContext.currentTime + .12
-        );
+const game =
+    document.getElementById(
+        "game"
+    );
 
 
-        gain.gain.setValueAtTime(
-            .12,
-            audioContext.currentTime
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            .001,
-            audioContext.currentTime + .18
-        );
+const secretSentence =
+    document.getElementById(
+        "secretSentence"
+    );
 
 
-        oscillator.connect(gain);
+const keyboard =
+    document.getElementById(
+        "keyboard"
+    );
 
-        gain.connect(
-            audioContext.destination
-        );
+
+const message =
+    document.getElementById(
+        "message"
+    );
 
 
-        oscillator.start();
+const progress =
+    document.getElementById(
+        "progress"
+    );
 
-        oscillator.stop(
-            audioContext.currentTime + .18
-        );
 
-    }
+const nextButton =
+    document.getElementById(
+        "nextButton"
+    );
 
-    catch(error){
 
-        console.log(
-            "Звук недоступен"
-        );
+const finish =
+    document.getElementById(
+        "finish"
+    );
 
-    }
 
-}
+const restart =
+    document.getElementById(
+        "restart"
+    );
+
 
 
 /* =========================================================
-   КЛАВИАТУРА
+   СОЗДАНИЕ КЛАВИАТУРЫ
 ========================================================= */
+
 
 function createKeyboard(){
 
     keyboard.innerHTML = "";
 
 
-    ALPHABET.forEach(letter=>{
-
-        const button =
-            document.createElement("button");
-
-        button.className = "key";
-
-        button.textContent = letter;
-
-        button.dataset.letter = letter;
+    ALPHABET.forEach(
+        letter => {
 
 
-        button.addEventListener(
-            "click",
-            ()=>checkLetter(letter,button)
-        );
+            const button =
+                document.createElement(
+                    "button"
+                );
 
 
-        keyboard.appendChild(button);
+            button.className =
+                "key";
 
-    });
+
+            button.textContent =
+                letter;
+
+
+            button.dataset.letter =
+                letter;
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    checkLetter(
+                        letter,
+                        button
+                    );
+
+                }
+            );
+
+
+            keyboard.appendChild(
+                button
+            );
+
+        }
+    );
 
 }
 
 
+
 /* =========================================================
-   СОЗДАНИЕ УРОВНЯ
+   ЗАГРУЗКА УРОВНЯ
 ========================================================= */
+
 
 function loadLevel(){
 
-    secretSentence.innerHTML = "";
 
-    message.textContent = "";
+    secretSentence.innerHTML =
+        "";
 
-    message.className = "message";
 
-    nextButton.classList.remove("show");
+    message.textContent =
+        "";
 
-    currentLetterIndex = 0;
 
-    flatLetters = [];
+    message.className =
+        "message";
+
+
+    nextButton.classList.remove(
+        "show"
+    );
+
+
+    currentLetterIndex =
+        0;
+
+
+    flatLetters =
+        [];
 
 
     const level =
-        LEVELS[currentLevel];
+        LEVELS[
+            currentLevel
+        ];
 
 
-    level.forEach(word=>{
 
-        const wordElement =
-            document.createElement("div");
-
-        wordElement.className =
-            "secret-word";
+    level.forEach(
+        word => {
 
 
-        word.forEach(item=>{
-
-            flatLetters.push(item);
-
-
-            const letterItem =
-                document.createElement("div");
-
-            letterItem.className =
-                "secret-letter";
+            const wordElement =
+                document.createElement(
+                    "div"
+                );
 
 
-            const picture =
-                document.createElement("div");
-
-            picture.className =
-                "picture";
-
-            picture.textContent =
-                item.picture;
-
-            picture.title =
-                item.name;
+            wordElement.className =
+                "secret-word";
 
 
-            const box =
-                document.createElement("div");
 
-            box.className =
-                "letter-box";
+            word.forEach(
+                item => {
 
 
-            letterItem.appendChild(
-                picture
+                    flatLetters.push(
+                        item
+                    );
+
+
+                    const letterItem =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    letterItem.className =
+                        "secret-letter";
+
+
+
+                    const picture =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    picture.className =
+                        "picture";
+
+
+                    picture.textContent =
+                        item.picture;
+
+
+                    picture.title =
+                        item.name;
+
+
+
+                    const box =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    box.className =
+                        "letter-box";
+
+
+
+                    letterItem.appendChild(
+                        picture
+                    );
+
+
+                    letterItem.appendChild(
+                        box
+                    );
+
+
+                    wordElement.appendChild(
+                        letterItem
+                    );
+
+                }
             );
 
-            letterItem.appendChild(
-                box
+
+
+            secretSentence.appendChild(
+                wordElement
             );
 
-            wordElement.appendChild(
-                letterItem
-            );
+        }
+    );
 
-        });
-
-
-        secretSentence.appendChild(
-            wordElement
-        );
-
-    });
 
 
     progress.textContent =
@@ -997,16 +1722,20 @@ function loadLevel(){
 }
 
 
+
 /* =========================================================
    АКТИВНАЯ КЛЕТКА
 ========================================================= */
 
+
 function updateCurrentBox(){
+
 
     const boxes =
         document.querySelectorAll(
             ".letter-box"
         );
+
 
     const pictures =
         document.querySelectorAll(
@@ -1014,14 +1743,29 @@ function updateCurrentBox(){
         );
 
 
-    boxes.forEach(box=>
-        box.classList.remove("current")
+
+    boxes.forEach(
+        box => {
+
+            box.classList.remove(
+                "current"
+            );
+
+        }
     );
 
 
-    pictures.forEach(pic=>
-        pic.classList.remove("active")
+
+    pictures.forEach(
+        picture => {
+
+            picture.classList.remove(
+                "active"
+            );
+
+        }
     );
+
 
 
     if(
@@ -1047,21 +1791,27 @@ function updateCurrentBox(){
 }
 
 
+
 /* =========================================================
    ПРОВЕРКА БУКВЫ
 ========================================================= */
+
 
 function checkLetter(
     selectedLetter,
     button
 ){
 
+
     if(
         currentLetterIndex >=
         flatLetters.length
     ){
+
         return;
+
     }
+
 
 
     const correctLetter =
@@ -1070,10 +1820,12 @@ function checkLetter(
         ].letter;
 
 
+
     if(
         selectedLetter ===
         correctLetter
     ){
+
 
         const boxes =
             document.querySelectorAll(
@@ -1081,10 +1833,12 @@ function checkLetter(
             );
 
 
+
         boxes[
             currentLetterIndex
         ].textContent =
             selectedLetter;
+
 
 
         boxes[
@@ -1094,6 +1848,7 @@ function checkLetter(
         );
 
 
+
         boxes[
             currentLetterIndex
         ].classList.add(
@@ -1101,7 +1856,10 @@ function checkLetter(
         );
 
 
+
         playCorrectSound();
+
+
 
         createStars(
             boxes[
@@ -1110,17 +1868,22 @@ function checkLetter(
         );
 
 
+
         currentLetterIndex++;
+
 
 
         message.className =
             "message";
 
+
         message.textContent =
             "✅ Верно!";
 
 
+
         updateCurrentBox();
+
 
 
         if(
@@ -1128,29 +1891,37 @@ function checkLetter(
             flatLetters.length
         ){
 
+
             message.textContent =
                 "🎉 Секретное послание разгадано!";
 
 
-            setTimeout(()=>{
+            setTimeout(
+                () => {
 
-                nextButton.classList.add(
-                    "show"
-                );
+                    nextButton.classList.add(
+                        "show"
+                    );
 
-            },400);
+                },
+                350
+            );
 
         }
 
     }
 
+
     else{
+
 
         message.className =
             "message error";
 
+
         message.textContent =
             "Попробуй ещё раз 🙂";
+
 
 
         button.classList.remove(
@@ -1170,138 +1941,22 @@ function checkLetter(
 }
 
 
-/* =========================================================
-   ЗВЁЗДОЧКИ
-========================================================= */
-
-function createStars(element){
-
-    const rect =
-        element.getBoundingClientRect();
-
-    const gameRect =
-        game.getBoundingClientRect();
-
-
-    const centerX =
-        rect.left -
-        gameRect.left +
-        rect.width / 2;
-
-    const centerY =
-        rect.top -
-        gameRect.top +
-        rect.height / 2;
-
-
-    const symbols =
-        ["⭐","✨","💫"];
-
-
-    for(let i=0;i<6;i++){
-
-        const star =
-            document.createElement("div");
-
-        star.className =
-            "star";
-
-
-        star.textContent =
-            symbols[
-                Math.floor(
-                    Math.random() *
-                    symbols.length
-                )
-            ];
-
-
-        star.style.left =
-            centerX + "px";
-
-        star.style.top =
-            centerY + "px";
-
-
-        star.style.setProperty(
-            "--x",
-            (
-                Math.random()*120-60
-            )+"px"
-        );
-
-        star.style.setProperty(
-            "--y",
-            (
-                Math.random()*100-70
-            )+"px"
-        );
-
-
-        game.appendChild(
-            star
-        );
-
-
-        setTimeout(
-            ()=>star.remove(),
-            850
-        );
-
-    }
-
-}
-
 
 /* =========================================================
-   СЛЕДУЮЩЕЕ ЗАДАНИЕ
+   ЗВУК ПРАВИЛЬНОГО ОТВЕТА
 ========================================================= */
 
-nextButton.addEventListener(
-    "click",
-    ()=>{
 
-        currentLevel++;
+function playCorrectSound(){
 
-
-        if(
-            currentLevel >=
-            LEVELS.length
-        ){
-
-            showFinish();
-
-            return;
-
-        }
-
-
-        loadLevel();
-
-    }
-);
-
-
-/* =========================================================
-   ФИНАЛ
-========================================================= */
-
-function showFinish(){
-
-    finish.classList.add(
-        "show"
-    );
-
-    playFinalSound();
-
-}
-
-
-function playFinalSound(){
 
     try{
 
-        if(!audioContext){
+
+        if(
+            !audioContext
+        ){
+
 
             audioContext =
                 new (
@@ -1312,74 +1967,268 @@ function playFinalSound(){
         }
 
 
-        const notes =
-            [523,659,784,1046];
+
+        const oscillator =
+            audioContext.createOscillator();
 
 
-        notes.forEach(
-            (frequency,index)=>{
 
-                const oscillator =
-                    audioContext.createOscillator();
-
-                const gain =
-                    audioContext.createGain();
+        const gain =
+            audioContext.createGain();
 
 
-                oscillator.frequency.value =
-                    frequency;
+
+        oscillator.type =
+            "sine";
 
 
-                gain.gain.value =
-                    .08;
+
+        oscillator.frequency
+            .setValueAtTime(
+
+                520,
+
+                audioContext
+                    .currentTime
+
+            );
 
 
-                oscillator.connect(
-                    gain
-                );
 
-                gain.connect(
-                    audioContext.destination
-                );
+        oscillator.frequency
+            .exponentialRampToValueAtTime(
 
+                760,
 
-                const start =
-                    audioContext.currentTime +
-                    index*.12;
+                audioContext
+                    .currentTime
+                    + .12
 
-
-                oscillator.start(
-                    start
-                );
+            );
 
 
-                oscillator.stop(
-                    start+.18
-                );
 
-            }
+        gain.gain
+            .setValueAtTime(
+
+                .12,
+
+                audioContext
+                    .currentTime
+
+            );
+
+
+
+        gain.gain
+            .exponentialRampToValueAtTime(
+
+                .001,
+
+                audioContext
+                    .currentTime
+                    + .18
+
+            );
+
+
+
+        oscillator.connect(
+            gain
+        );
+
+
+        gain.connect(
+            audioContext.destination
+        );
+
+
+        oscillator.start();
+
+
+        oscillator.stop(
+            audioContext.currentTime
+            + .18
         );
 
     }
 
-    catch(error){}
+
+    catch(error){
+
+        console.log(
+            "Звук недоступен"
+        );
+
+    }
 
 }
 
 
+
 /* =========================================================
-   НАЧАТЬ ЗАНОВО
+   ЗВЁЗДОЧКИ
 ========================================================= */
 
-restart.addEventListener(
-    "click",
-    ()=>{
 
-        currentLevel = 0;
+function createStars(
+    element
+){
 
-        finish.classList.remove(
-            "show"
+
+    const rect =
+        element.getBoundingClientRect();
+
+
+
+    const gameRect =
+        game.getBoundingClientRect();
+
+
+
+    const centerX =
+
+        rect.left
+        - gameRect.left
+        + rect.width / 2;
+
+
+
+    const centerY =
+
+        rect.top
+        - gameRect.top
+        + rect.height / 2;
+
+
+
+    const symbols = [
+
+        "⭐",
+        "✨",
+        "💫"
+
+    ];
+
+
+
+    for(
+        let i = 0;
+        i < 6;
+        i++
+    ){
+
+
+        const star =
+            document.createElement(
+                "div"
+            );
+
+
+        star.className =
+            "star";
+
+
+
+        star.textContent =
+
+            symbols[
+                Math.floor(
+                    Math.random()
+                    *
+                    symbols.length
+                )
+            ];
+
+
+
+        star.style.left =
+            centerX + "px";
+
+
+        star.style.top =
+            centerY + "px";
+
+
+
+        star.style.setProperty(
+
+            "--x",
+
+            (
+                Math.random()
+                * 120
+                - 60
+            )
+            + "px"
+
         );
+
+
+
+        star.style.setProperty(
+
+            "--y",
+
+            (
+                Math.random()
+                * 100
+                - 70
+            )
+            + "px"
+
+        );
+
+
+
+        game.appendChild(
+            star
+        );
+
+
+
+        setTimeout(
+            () => {
+
+                star.remove();
+
+            },
+            850
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   СЛЕДУЮЩЕЕ ЗАДАНИЕ
+========================================================= */
+
+
+nextButton.addEventListener(
+    "click",
+    () => {
+
+
+        currentLevel++;
+
+
+
+        if(
+            currentLevel >=
+            LEVELS.length
+        ){
+
+
+            showFinish();
+
+            return;
+
+        }
+
+
 
         loadLevel();
 
@@ -1387,15 +2236,178 @@ restart.addEventListener(
 );
 
 
+
 /* =========================================================
-   ЗАПУСК
+   ФИНАЛ
 ========================================================= */
+
+
+function showFinish(){
+
+
+    finish.classList.add(
+        "show"
+    );
+
+
+    playFinalSound();
+
+}
+
+
+
+/* =========================================================
+   ФИНАЛЬНЫЙ ЗВУК
+========================================================= */
+
+
+function playFinalSound(){
+
+
+    try{
+
+
+        if(
+            !audioContext
+        ){
+
+
+            audioContext =
+                new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }
+
+
+
+        const notes = [
+
+            523,
+            659,
+            784,
+            1046
+
+        ];
+
+
+
+        notes.forEach(
+            (
+                frequency,
+                index
+            ) => {
+
+
+                const oscillator =
+                    audioContext
+                        .createOscillator();
+
+
+
+                const gain =
+                    audioContext
+                        .createGain();
+
+
+
+                oscillator.frequency.value =
+                    frequency;
+
+
+
+                gain.gain.value =
+                    .08;
+
+
+
+                oscillator.connect(
+                    gain
+                );
+
+
+                gain.connect(
+                    audioContext.destination
+                );
+
+
+
+                const start =
+
+                    audioContext
+                        .currentTime
+                    +
+                    index * .12;
+
+
+
+                oscillator.start(
+                    start
+                );
+
+
+
+                oscillator.stop(
+                    start + .18
+                );
+
+            }
+        );
+
+    }
+
+
+    catch(error){
+
+        console.log(
+            "Финальный звук недоступен"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   ИГРАТЬ ЕЩЁ РАЗ
+========================================================= */
+
+
+restart.addEventListener(
+    "click",
+    () => {
+
+
+        currentLevel =
+            0;
+
+
+        finish.classList.remove(
+            "show"
+        );
+
+
+        loadLevel();
+
+    }
+);
+
+
+
+/* =========================================================
+   ЗАПУСК ИГРЫ
+========================================================= */
+
 
 createKeyboard();
 
 loadLevel();
 
+
 </script>
+
 
 </body>
 </html>
